@@ -7,7 +7,7 @@ public class GameSettings extends JFrame {
 
     private static final int WINDOW_POS_X = GameWindow.WINDOW_POS_X + 50;
     private static final int WINDOW_POS_Y = GameWindow.WINDOW_POS_Y + 50;
-    private static final int WINDOW_WIDTH = GameWindow.WINDOW_WIDTH - 100;
+    private static final int WINDOW_WIDTH = GameWindow.WINDOW_WIDTH-100;
     private static final int WINDOW_HEIGHT = 400;
 
     private static final int MIN_FIELD_SIZE = 3;
@@ -21,29 +21,49 @@ public class GameSettings extends JFrame {
     private JRadioButton radioButtonHvsAi = new JRadioButton("Human vs Ai", true);
     private JRadioButton radioButtonHvsH = new JRadioButton("Human vs Human");
     private ButtonGroup gameMode = new ButtonGroup();
+
     private JSlider sliderFieldSize = new JSlider(MIN_FIELD_SIZE, MAX_FIELD_SIZE, MIN_FIELD_SIZE);
     private JSlider sliderDotsToWin = new JSlider(MIN_FIELD_SIZE, MIN_FIELD_SIZE, MIN_FIELD_SIZE);
 
+    private Font fontLabel = new Font("Arial",Font.BOLD, 18);
+    private Color RED_NEW = new Color(193,15,24);
+    private Font fontButton = new Font("Arial", Font.BOLD,16);
+
     public GameSettings(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
+
         setBounds(WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
+        setLocationRelativeTo(null);
         setTitle("Game Settings");
 
         setLayout(new GridLayout(8, 1));
 
-        add(new JLabel("Select game mode"));
+        JLabel modeSetUp = new JLabel("Select Game Mode");
+        modeSetUp.setHorizontalAlignment(SwingConstants.CENTER);
+        modeSetUp.setFont(fontLabel);
+        add(modeSetUp);
+
         add(radioButtonHvsAi);
         add(radioButtonHvsH);
         gameMode.add(radioButtonHvsAi);
         gameMode.add(radioButtonHvsH);
 
-        add(new JLabel("Select field's size:"));
+
+        JLabel fieldSizeSetUp = new JLabel("Select field's size:");
+        fieldSizeSetUp.setHorizontalAlignment(SwingConstants.CENTER);
+        fieldSizeSetUp.setFont(fontButton);
+        add(fieldSizeSetUp);
+
         sliderFieldSize.setMajorTickSpacing(1);
         sliderFieldSize.setPaintLabels(true);
         sliderFieldSize.setPaintTicks(true);
         add(sliderFieldSize);
 
-        add(new JLabel("Select dots to win:"));
+        JLabel dotsToWinSetUp = new JLabel("Select dots to win:");
+        dotsToWinSetUp.setHorizontalAlignment(SwingConstants.CENTER);
+        dotsToWinSetUp.setFont(fontButton);
+        add(dotsToWinSetUp);
+
         sliderDotsToWin.setMajorTickSpacing(1);
         sliderDotsToWin.setPaintLabels(true);
         sliderDotsToWin.setPaintTicks(true);
@@ -54,7 +74,9 @@ public class GameSettings extends JFrame {
         });
 
         JButton buttonStartNewGame = new JButton("Start new game");
-        buttonStartNewGame.setBackground(Color.CYAN);
+        buttonStartNewGame.setBackground(RED_NEW);
+        buttonStartNewGame.setForeground(Color.WHITE);
+        buttonStartNewGame.setFont(fontButton);
         add(buttonStartNewGame);
 
         buttonStartNewGame.addActionListener(e -> {
@@ -70,7 +92,18 @@ public class GameSettings extends JFrame {
             int fieldSize = sliderFieldSize.getValue();
             int dotsToWin = sliderDotsToWin.getValue();
 
+            GameLogic.SIZE = fieldSize;
+            GameLogic.DOTS_TO_WIN = dotsToWin;
+            GameLogic.initMap();
+            GameLogic.isGameOver = false;
+
+            GameWindow.myPanel.setVisible(false);
+
+
+
             gameWindow.startNewGame(mode,fieldSize, fieldSize, dotsToWin);
+
+
         });
 
         setVisible(false);
